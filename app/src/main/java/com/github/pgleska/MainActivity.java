@@ -1,8 +1,11 @@
 package com.github.pgleska;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -61,5 +64,24 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+
+    //NIE DZIALA NWM CZEMU
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.nav_profile:
+                Toast.makeText(this, "wybrano profil", Toast.LENGTH_LONG).show();
+            case R.id.nav_gallery:
+                Toast.makeText(this, "wybrano galerie", Toast.LENGTH_LONG).show();
+            case R.id.nav_home:
+                Toast.makeText(this, "wybrano home", Toast.LENGTH_LONG).show();
+            case R.id.nav_slideshow:
+                Toast.makeText(this, "wybrano slideshow", Toast.LENGTH_LONG).show();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
