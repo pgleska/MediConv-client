@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:hint="Search for doctor"/>
 
-    <ScrollView
-        android:id="@+id/sv_conversations"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_conversations"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
