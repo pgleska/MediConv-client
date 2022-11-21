@@ -30,6 +30,28 @@
     <TextView
         android:layout_width="900px"
         android:layout_height="wrap_content"
+        android:text="Username:"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginTop="200px"
+        android:layout_marginBottom="50px"
+        android:textSize="50px"
+        android:textColor="@color/black"
+        />
+
+    <TextView
+        android:layout_width="900px"
+        android:layout_height="wrap_content"
+        android:text="user name will be here"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10px"
+        android:textSize="50px"
+        />
+
+    <TextView
+        android:layout_width="900px"
+        android:layout_height="wrap_content"
         android:text="E-mail:"
         android:gravity="center"
         android:layout_gravity="center"
@@ -45,7 +67,15 @@
         android:text="user email wil be here"
         android:gravity="center"
         android:layout_gravity="center"
-        android:layout_marginBottom="150px"
+        android:layout_marginBottom="50px"
         android:textSize="50px"
         />
+
+    <Button
+        android:id="@+id/buttonReturn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Return"
+        android:layout_marginStart="50px"
+        android:background="@drawable/round_edges" />
 </LinearLayout>

@@ -6,13 +6,18 @@
 
     <EditText
         android:id="@+id/et_search_doctor"
-        android:layout_width="match_parent"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:hint="Search for doctor"/>
+        android:padding="10px"
+        android:layout_gravity="center"
+        android:layout_marginTop="20px"
+        android:hint="Search for doctor"
+        android:background="@drawable/solid_border"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_conversations"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="20px"/>
 
 </LinearLayout>

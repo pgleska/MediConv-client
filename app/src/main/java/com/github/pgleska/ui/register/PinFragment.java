@@ -11,18 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.github.pgleska.R;
-import com.github.pgleska.databinding.FragmentRegisterBinding;
+import com.github.pgleska.databinding.FragmentPinBinding;
 
-public class RegisterFragment extends Fragment {
+public class PinFragment extends Fragment {
+    //generating private and public keys
 
-    private FragmentRegisterBinding binding;
+    private FragmentPinBinding binding;
     private View root;
     private Button ButtonRegister;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentRegisterBinding.inflate(inflater, container, false);
+        binding = FragmentPinBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
         initComponents();
@@ -38,13 +39,13 @@ public class RegisterFragment extends Fragment {
     }
 
     private void initComponents() {
-        ButtonRegister = binding.btnRegister;
+
+        ButtonRegister = binding.btnConfirm;
     }
 
     private void initListeners() {
         ButtonRegister.setOnClickListener(v -> {
-            Navigation.findNavController(root).navigate(R.id.action_nav_register_to_nav_pin);
+            Navigation.findNavController(root).navigate(R.id.action_nav_login_to_nav_pin);
         });
     }
 }
-

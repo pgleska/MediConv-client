@@ -16,6 +16,7 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
     private View root;
+    private Button ButtonReturn;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -36,9 +37,12 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initComponents() {
+        ButtonReturn = binding.buttonReturn;
     }
 
     private void initListeners() {
-
+        ButtonReturn.setOnClickListener(v -> {
+            Navigation.findNavController(root).navigate(R.id.action_nav_profile_to_nav_login);
+        });
     }
 }
