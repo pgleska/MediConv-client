@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:ignore="HardcodedText,PxUsage">
+
+    <TextView
+        android:layout_width="900px"
+        android:layout_height="300px"
+        android:layout_marginTop="200px"
+        android:text="Register yourself!\n\n Enter your credentials..."
+        android:height="130px"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textSize="50px"
+        android:textColor="#EDEDEF"
+        android:background="@drawable/round_edges"
+        android:backgroundTint="#1886AE"
+        tools:ignore="HardcodedText,PxUsage" />
+
+    <EditText
+        android:id="@+id/register_email"
+        android:layout_height="120px"
+        android:layout_width="700px"
+        android:layout_gravity="center"
+        android:layout_marginTop="350px"
+        android:layout_marginBottom="80px"
+        android:hint="email"
+        android:padding="20px"
+        android:background="@drawable/solid_border"
+        />
+
+    <EditText
+        android:id="@+id/register_password"
+        android:layout_height="120px"
+        android:layout_width="700px"
+        android:layout_gravity="center"
+        android:layout_marginBottom="120px"
+        android:padding="20px"
+        android:background="@drawable/solid_border"
+        android:hint="password" />
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_margin="100px"
+        android:textSize="50px"
+        android:textColor="#EDEDEF"
+        android:background="@drawable/round_edges"
+        android:backgroundTint="#1886AE"
+        android:textAllCaps="false"/>
+
+
+</LinearLayout>
