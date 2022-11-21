@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.pgleska.R;
 import com.github.pgleska.adapters.ConversationsAdapter;
 import com.github.pgleska.databinding.FragmentConversationsBinding;
-import com.github.pgleska.dtos.ConversationDTO;
+import com.github.pgleska.dtos.MessageDTO;
 import com.github.pgleska.retrofit.RetrofitClient;
-import com.github.pgleska.retrofit.interfaces.ConversationInterface;
+import com.github.pgleska.retrofit.interfaces.MessageInterface;
 import com.github.pgleska.ui.viewModels.CredsViewModel;
 
 import java.util.ArrayList;
@@ -41,9 +41,9 @@ public class ConversationsFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
-    private List<ConversationDTO> conversations;
+    private List<MessageDTO> conversations;
 
-    private ConversationInterface conversationInterface;
+    private MessageInterface messageInterface;
 
     private EditText searchBar;
 
@@ -75,7 +75,7 @@ public class ConversationsFragment extends Fragment {
         adapter = new ConversationsAdapter(conversations, viewModel, root);
         recyclerView.setAdapter(adapter);
 
-        conversationInterface = RetrofitClient.getConversationInterface(getString(R.string.server_address));
+        messageInterface = RetrofitClient.getConversationInterface(getString(R.string.server_address));
 
         getConversations();
     }
@@ -103,10 +103,10 @@ public class ConversationsFragment extends Fragment {
     }
 
     private void getConversations() {
-        Call<List<ConversationDTO>> call = conversationInterface.getConversations(viewModel.getToken());
-        call.enqueue(new Callback<List<ConversationDTO>>() {
+        Call<List<MessageDTO>> call = messageInterface.getConversations(viewModel.getToken());
+        call.enqueue(new Callback<List<MessageDTO>>() {
             @Override
-            public void onResponse(Call<List<ConversationDTO>> call, Response<List<ConversationDTO>> response) {
+            public void onResponse(Call<List<MessageDTO>> call, Response<List<MessageDTO>> response) {
                 Log.e(TAG, String.valueOf(response.code()));
                 if(response.isSuccessful()) {
                     adapter.update(response.body());
@@ -114,18 +114,18 @@ public class ConversationsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<ConversationDTO>> call, Throwable t) {
+            public void onFailure(Call<List<MessageDTO>> call, Throwable t) {
                 Log.e(TAG, t.getMessage());
             }
         });
     }
 
     private void getConversationsWithPhrase(String phrase) {
-        Call<List<ConversationDTO>> call = conversationInterface.getConversationsWithQueryParams(
+        Call<List<MessageDTO>> call = messageInterface.getConversationsWithQueryParams(
                 viewModel.getToken(), phrase);
-        call.enqueue(new Callback<List<ConversationDTO>>() {
+        call.enqueue(new Callback<List<MessageDTO>>() {
             @Override
-            public void onResponse(Call<List<ConversationDTO>> call, Response<List<ConversationDTO>> response) {
+            public void onResponse(Call<List<MessageDTO>> call, Response<List<MessageDTO>> response) {
                 Log.e(TAG, String.valueOf(response.code()));
                 if(response.isSuccessful()) {
                     adapter.update(response.body());
@@ -133,7 +133,7 @@ public class ConversationsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<ConversationDTO>> call, Throwable t) {
+            public void onFailure(Call<List<MessageDTO>> call, Throwable t) {
                 Log.e(TAG, t.getMessage());
             }
         });

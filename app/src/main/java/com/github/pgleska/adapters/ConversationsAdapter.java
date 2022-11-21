@@ -11,18 +11,18 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.pgleska.R;
-import com.github.pgleska.dtos.ConversationDTO;
+import com.github.pgleska.dtos.MessageDTO;
 import com.github.pgleska.ui.viewModels.CredsViewModel;
 
 import java.util.List;
 
 public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdapter.ConversationViewHolder> {
 
-    private List<ConversationDTO> conversations;
+    private List<MessageDTO> conversations;
     private CredsViewModel credsViewModel;
     private View rootView;
 
-    public ConversationsAdapter(List<ConversationDTO> conversations, CredsViewModel credsViewModel,
+    public ConversationsAdapter(List<MessageDTO> conversations, CredsViewModel credsViewModel,
                                 View rootView) {
         this.conversations = conversations;
         this.credsViewModel = credsViewModel;
@@ -40,7 +40,7 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
 
     @Override
     public void onBindViewHolder(@NonNull ConversationViewHolder holder, int position) {
-        ConversationDTO conversation = conversations.get(position);
+        MessageDTO conversation = conversations.get(position);
         holder.name.setText(conversation.getRecipient().getName());
         holder.lastMessage.setText(conversation.getPlainLastMessage(credsViewModel.getPrivateKey()));
         holder.date.setText(conversation.getDate());
@@ -55,7 +55,7 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
         return conversations.size();
     }
 
-    public void update(List<ConversationDTO> conversations) {
+    public void update(List<MessageDTO> conversations) {
         this.conversations = conversations;
         notifyDataSetChanged();
     }

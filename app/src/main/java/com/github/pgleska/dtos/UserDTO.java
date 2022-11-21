@@ -1,16 +1,19 @@
 package com.github.pgleska.dtos;
 
 public class UserDTO {
-    private String name;
+    private Integer id;
     private String email;
-    private String pathToPhoto;
+    private String password;
+    private String name;
+    private Role role;
+    private String publicKey;
 
-    public String getName() {
-        return name;
+    public Integer getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -21,11 +24,35 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getPathToPhoto() {
-        return pathToPhoto;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPathToPhoto(String pathToPhoto) {
-        this.pathToPhoto = pathToPhoto;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 }

@@ -1,6 +1,7 @@
 package com.github.pgleska.retrofit;
 
-import com.github.pgleska.retrofit.interfaces.ConversationInterface;
+import com.github.pgleska.retrofit.interfaces.MessageInterface;
+import com.github.pgleska.retrofit.interfaces.UserInterface;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -13,14 +14,18 @@ public class RetrofitClient {
     private static Retrofit getClient(String baseUrl) {
         if(retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl + "/api/")
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
         return retrofit;
     }
 
-    public static ConversationInterface getConversationInterface(String url) {
-        return getClient(url).create(ConversationInterface.class);
+    public static MessageInterface getConversationInterface(String url) {
+        return getClient(url).create(MessageInterface.class);
+    }
+
+    public static UserInterface getUserInterface(String url) {
+        return getClient(url).create(UserInterface.class);
     }
 }
