@@ -7,6 +7,8 @@ public class MessageDTO {
     private LocalDateTime timestamp;
     private Integer authorId;
     private Integer receiverId;
+    private String authorName;
+    private String receiverName;
     private String content;
     private String sharedKeyEncryptedWithAuthorPKey;
     private String sharedKeyEncryptedWithReceiverPKey;
@@ -41,6 +43,22 @@ public class MessageDTO {
 
     public void setReceiverId(Integer receiverId) {
         this.receiverId = receiverId;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
     }
 
     public String getContent() {

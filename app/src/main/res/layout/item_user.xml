@@ -26,27 +26,6 @@
                 android:text="John Wick"
                 android:textAllCaps="false" />
 
-            <TextView
-                android:id="@+id/item_conversation_date"
-                android:layout_alignParentRight="true"
-                android:layout_alignBaseline="@id/item_conversation_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/item_conversation_latest"
-                android:layout_below="@id/item_conversation_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="15dp"
-                android:lines="1"
-                android:ellipsize="end"
-                android:text="Lorem ipsum dolor sit amet,"
-                android:textSize="14sp"
-                android:textAllCaps="false" />
-
         </RelativeLayout>
 
     </RelativeLayout>

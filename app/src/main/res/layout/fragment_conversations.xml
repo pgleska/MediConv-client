@@ -11,7 +11,7 @@
         android:padding="10px"
         android:layout_gravity="center"
         android:layout_marginTop="20px"
-        android:hint="Search for doctor"
+        android:hint="Search for user"
         android:background="@drawable/solid_border"/>
 
     <androidx.recyclerview.widget.RecyclerView

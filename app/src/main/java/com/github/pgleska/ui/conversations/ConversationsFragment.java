@@ -15,13 +15,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.pgleska.R;
-import com.github.pgleska.adapters.ConversationsAdapter;
+import com.github.pgleska.adapters.UsersAdapter;
 import com.github.pgleska.databinding.FragmentConversationsBinding;
 import com.github.pgleska.dtos.MessageDTO;
-import com.github.pgleska.retrofit.RetrofitClient;
 import com.github.pgleska.retrofit.interfaces.MessageInterface;
-import com.github.pgleska.ui.viewModels.CredsViewModel;
+import com.github.pgleska.ui.viewModels.UniversalViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +33,9 @@ public class ConversationsFragment extends Fragment {
 
     private FragmentConversationsBinding binding;
     private View root;
-    private CredsViewModel viewModel;
+    private UniversalViewModel viewModel;
 
-    private ConversationsAdapter adapter;
+    private UsersAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
@@ -65,17 +63,17 @@ public class ConversationsFragment extends Fragment {
     }
 
     private void initComponents() {
-        viewModel = new ViewModelProvider(getActivity()).get(CredsViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(UniversalViewModel.class);
         recyclerView = binding.rvConversations;
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
         conversations = new ArrayList<>();
-        adapter = new ConversationsAdapter(conversations, viewModel, root);
+        adapter = new UsersAdapter(conversations, viewModel, root);
         recyclerView.setAdapter(adapter);
 
-        messageInterface = RetrofitClient.getConversationInterface(getString(R.string.server_address));
+//        messageInterface = RetrofitClient.getConversationInterface(getString(R.string.server_address));
 
         getConversations();
     }

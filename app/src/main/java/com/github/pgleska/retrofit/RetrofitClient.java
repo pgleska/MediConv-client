@@ -21,7 +21,7 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    public static MessageInterface getConversationInterface(String url) {
+    public static MessageInterface getMessageInterface(String url) {
         return getClient(url).create(MessageInterface.class);
     }
 

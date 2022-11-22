@@ -48,7 +48,7 @@ public class LoginFragment extends Fragment {
             Navigation.findNavController(root).navigate(R.id.action_nav_login_to_nav_register);
         });
         ButtonLogin.setOnClickListener(v -> {
-            Navigation.findNavController(root).navigate(R.id.action_nav_login_to_nav_conversations);
+//            Navigation.findNavController(root).navigate(R.id.action_nav_login_to_nav_conversations);
         });
     }
 }

@@ -12,40 +12,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.pgleska.R;
 import com.github.pgleska.dtos.MessageDTO;
-import com.github.pgleska.ui.viewModels.CredsViewModel;
+import com.github.pgleska.ui.viewModels.UniversalViewModel;
 
 import java.util.List;
 
-public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdapter.ConversationViewHolder> {
+public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ConversationViewHolder> {
 
     private List<MessageDTO> conversations;
-    private CredsViewModel credsViewModel;
+    private UniversalViewModel universalViewModel;
     private View rootView;
 
-    public ConversationsAdapter(List<MessageDTO> conversations, CredsViewModel credsViewModel,
-                                View rootView) {
+    public UsersAdapter(List<MessageDTO> conversations, UniversalViewModel universalViewModel,
+                        View rootView) {
         this.conversations = conversations;
-        this.credsViewModel = credsViewModel;
+        this.universalViewModel = universalViewModel;
         this.rootView = rootView;
     }
 
     @NonNull
     @Override
     public ConversationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_conversation, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user, parent, false);
 
-        ConversationsAdapter.ConversationViewHolder nvh = new ConversationsAdapter.ConversationViewHolder(v);
+        UsersAdapter.ConversationViewHolder nvh = new UsersAdapter.ConversationViewHolder(v);
         return nvh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ConversationViewHolder holder, int position) {
-        MessageDTO conversation = conversations.get(position);
-        holder.name.setText(conversation.getRecipient().getName());
-        holder.lastMessage.setText(conversation.getPlainLastMessage(credsViewModel.getPrivateKey()));
-        holder.date.setText(conversation.getDate());
+        MessageDTO message = conversations.get(position);
+        holder.name.setText(message.getContent());
         holder.layout.setOnClickListener(v -> {
-            //TODO: create proper navigation
             Navigation.findNavController(rootView).navigate(-1);
         });
     }
@@ -68,8 +65,6 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
             super(itemView);
             this.layout = itemView.findViewById(R.id.item_conversation);
             this.name = itemView.findViewById(R.id.item_conversation_name);
-            this.date = itemView.findViewById(R.id.item_conversation_date);
-            this.lastMessage = itemView.findViewById(R.id.item_conversation_latest);
         }
     }
 }
