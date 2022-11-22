@@ -14,6 +14,8 @@ public class UniversalViewModel extends ViewModel {
     public UniversalViewModel() {
         this.privateKey = new MutableLiveData<>();
         this.token = new MutableLiveData<>();
+        this.user = new MutableLiveData<>();
+        this.otherUser = new MutableLiveData<>();
     }
 
     public void setPrivateKey(String privateKey) {
@@ -29,7 +31,7 @@ public class UniversalViewModel extends ViewModel {
     }
 
     public String getToken() {
-        return token.getValue();
+        return "Bearer " + token.getValue();
     }
 
     public UserDTO getUser() {

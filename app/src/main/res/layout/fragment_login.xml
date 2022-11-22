@@ -40,7 +40,8 @@
         android:padding="20px"
         android:background="@drawable/solid_border"
         android:hint="password"
-        tools:ignore="HardcodedText,PxUsage" />
+        tools:ignore="HardcodedText,PxUsage"
+        android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/btn_login"

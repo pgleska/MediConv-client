@@ -15,10 +15,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.pgleska.R;
 import com.github.pgleska.adapters.UsersAdapter;
 import com.github.pgleska.databinding.FragmentConversationsBinding;
 import com.github.pgleska.dtos.MessageDTO;
+import com.github.pgleska.dtos.ResponseDTO;
+import com.github.pgleska.dtos.UserDTO;
+import com.github.pgleska.retrofit.RetrofitClient;
 import com.github.pgleska.retrofit.interfaces.MessageInterface;
+import com.github.pgleska.retrofit.interfaces.UserInterface;
 import com.github.pgleska.ui.viewModels.UniversalViewModel;
 
 import java.util.ArrayList;
@@ -39,9 +44,10 @@ public class ConversationsFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
-    private List<MessageDTO> conversations;
+    private List<UserDTO> users;
 
     private MessageInterface messageInterface;
+    private UserInterface userInterface;
 
     private EditText searchBar;
 
@@ -69,13 +75,15 @@ public class ConversationsFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        conversations = new ArrayList<>();
-        adapter = new UsersAdapter(conversations, viewModel, root);
+        users = new ArrayList<>();
+        adapter = new UsersAdapter(users, viewModel, root);
         recyclerView.setAdapter(adapter);
+        searchBar = binding.etSearchDoctor;
 
-//        messageInterface = RetrofitClient.getConversationInterface(getString(R.string.server_address));
+        userInterface = RetrofitClient.getUserInterface(getString(R.string.server_address));
 
-        getConversations();
+        getUser();
+        getUsers();
     }
 
     private void initListeners() {
@@ -93,46 +101,47 @@ public class ConversationsFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 if(editable.toString().isEmpty())
-                    getConversations();
+                    getUsers();
                 else
-                    getConversationsWithPhrase(editable.toString());
+                    getUsersWithSeq(editable.toString());
             }
         });
     }
 
-    private void getConversations() {
-        Call<List<MessageDTO>> call = messageInterface.getConversations(viewModel.getToken());
-        call.enqueue(new Callback<List<MessageDTO>>() {
+    private void getUser() {
+        Call<ResponseDTO<UserDTO>> call = userInterface.getUser(viewModel.getToken());
+        call.enqueue(new Callback<ResponseDTO<UserDTO>>() {
             @Override
-            public void onResponse(Call<List<MessageDTO>> call, Response<List<MessageDTO>> response) {
-                Log.e(TAG, String.valueOf(response.code()));
+            public void onResponse(Call<ResponseDTO<UserDTO>> call, Response<ResponseDTO<UserDTO>> response) {
                 if(response.isSuccessful()) {
-                    adapter.update(response.body());
+                    viewModel.setUser(response.body().getPayload());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<MessageDTO>> call, Throwable t) {
-                Log.e(TAG, t.getMessage());
+            public void onFailure(Call<ResponseDTO<UserDTO>> call, Throwable t) {
+
             }
         });
     }
 
-    private void getConversationsWithPhrase(String phrase) {
-        Call<List<MessageDTO>> call = messageInterface.getConversationsWithQueryParams(
-                viewModel.getToken(), phrase);
-        call.enqueue(new Callback<List<MessageDTO>>() {
+    private void getUsers() {
+        getUsersWithSeq("");
+    }
+
+    private void getUsersWithSeq(String seq) {
+        Call<ResponseDTO<List<UserDTO>>> call = userInterface.searchForUser(viewModel.getToken(), seq);
+        call.enqueue(new Callback<ResponseDTO<List<UserDTO>>>() {
             @Override
-            public void onResponse(Call<List<MessageDTO>> call, Response<List<MessageDTO>> response) {
-                Log.e(TAG, String.valueOf(response.code()));
+            public void onResponse(Call<ResponseDTO<List<UserDTO>>> call, Response<ResponseDTO<List<UserDTO>>> response) {
                 if(response.isSuccessful()) {
-                    adapter.update(response.body());
+                    adapter.update(response.body().getPayload());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<MessageDTO>> call, Throwable t) {
-                Log.e(TAG, t.getMessage());
+            public void onFailure(Call<ResponseDTO<List<UserDTO>>> call, Throwable t) {
+
             }
         });
     }

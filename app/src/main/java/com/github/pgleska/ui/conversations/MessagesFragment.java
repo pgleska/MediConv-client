@@ -102,7 +102,7 @@ public class MessagesFragment extends Fragment {
                 messageDTO.setContent(encryptMessage(content, sharedKey));
                 messageDTO.setSharedKeyEncryptedWithAuthorPKey(encryptSharedKey(sharedKey, viewModel.getUser().getPublicKey()));
                 messageDTO.setSharedKeyEncryptedWithReceiverPKey(encryptSharedKey(sharedKey, viewModel.getOtherUser().getPublicKey()));
-
+                sendMessage(messageDTO);
             } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchPaddingException |
                 IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
                 e.printStackTrace();

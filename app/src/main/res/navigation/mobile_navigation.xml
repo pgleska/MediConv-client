@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_nav_login_to_nav_pin"
             app:destination="@id/nav_pin" />
+        <action
+            android:id="@+id/action_nav_login_to_nav_conversations"
+            app:destination="@id/nav_conversations" />
     </fragment>
 
     <fragment

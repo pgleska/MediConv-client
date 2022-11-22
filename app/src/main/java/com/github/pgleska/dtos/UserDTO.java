@@ -5,7 +5,7 @@ public class UserDTO {
     private String email;
     private String password;
     private String name;
-    private Role role;
+    private String role;
     private String publicKey;
 
     public Integer getId() {
@@ -40,11 +40,11 @@ public class UserDTO {
         this.name = name;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

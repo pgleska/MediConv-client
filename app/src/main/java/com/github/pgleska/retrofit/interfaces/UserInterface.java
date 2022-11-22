@@ -20,10 +20,13 @@ public interface UserInterface {
     @POST("/login")
     Call<TokenDTO> login(@Body CredentialsDTO credentialsDTO);
 
+    @GET("/api/user")
+    Call<ResponseDTO<UserDTO>> getUser(@Header("Authorization") String token);
+
     @POST("/api/user/register")
     Call<ResponseDTO<UserDTO>> registerUser(@Body UserDTO userDTO);
 
-    @POST("/api/user/search")
+    @GET("/api/user/search")
     Call<ResponseDTO<List<UserDTO>>> searchForUser(@Header("Authorization") String token,
                                                    @Query("seq") String sequence);
 

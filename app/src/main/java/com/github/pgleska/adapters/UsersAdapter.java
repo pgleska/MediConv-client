@@ -12,19 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.pgleska.R;
 import com.github.pgleska.dtos.MessageDTO;
+import com.github.pgleska.dtos.UserDTO;
 import com.github.pgleska.ui.viewModels.UniversalViewModel;
 
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ConversationViewHolder> {
 
-    private List<MessageDTO> conversations;
+    private List<UserDTO> users;
     private UniversalViewModel universalViewModel;
     private View rootView;
 
-    public UsersAdapter(List<MessageDTO> conversations, UniversalViewModel universalViewModel,
+    public UsersAdapter(List<UserDTO> users, UniversalViewModel universalViewModel,
                         View rootView) {
-        this.conversations = conversations;
+        this.users = users;
         this.universalViewModel = universalViewModel;
         this.rootView = rootView;
     }
@@ -40,20 +41,21 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.Conversation
 
     @Override
     public void onBindViewHolder(@NonNull ConversationViewHolder holder, int position) {
-        MessageDTO message = conversations.get(position);
-        holder.name.setText(message.getContent());
+        UserDTO user = users.get(position);
+        holder.name.setText(user.getName());
         holder.layout.setOnClickListener(v -> {
-            Navigation.findNavController(rootView).navigate(-1);
+            universalViewModel.setOtherUser(user);
+            Navigation.findNavController(rootView).navigate(R.id.action_nav_conversations_to_nav_messages);
         });
     }
 
     @Override
     public int getItemCount() {
-        return conversations.size();
+        return users.size();
     }
 
-    public void update(List<MessageDTO> conversations) {
-        this.conversations = conversations;
+    public void update(List<UserDTO> users) {
+        this.users = users;
         notifyDataSetChanged();
     }
 
