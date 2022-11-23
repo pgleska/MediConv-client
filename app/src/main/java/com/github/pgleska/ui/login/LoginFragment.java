@@ -68,9 +68,11 @@ public class LoginFragment extends Fragment {
 
     private void initListeners() {
         ButtonRegister.setOnClickListener(v -> {
+            viewModel.setRegisterMode();
             Navigation.findNavController(root).navigate(R.id.action_nav_login_to_nav_register);
         });
         ButtonLogin.setOnClickListener(v -> {
+            viewModel.setLoginMode();
             String email = emailET.getText().toString();
             String password = passwordET.getText().toString();
             CredentialsDTO credentialsDTO = new CredentialsDTO();

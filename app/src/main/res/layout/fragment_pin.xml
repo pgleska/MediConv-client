@@ -20,7 +20,7 @@
 
 
     <EditText
-        android:id="@+id/et_email"
+        android:id="@+id/et_pin"
         android:layout_height="120px"
         android:layout_width="700px"
         android:layout_gravity="center"
@@ -29,7 +29,8 @@
         android:hint="4-digit PIN..."
         android:padding="20px"
         android:background="@drawable/solid_border"
-        tools:ignore="HardcodedText,PxUsage" />
+        tools:ignore="HardcodedText,PxUsage"
+        android:inputType="numberPassword"/>
 
     <Button
         android:id="@+id/btn_confirm"

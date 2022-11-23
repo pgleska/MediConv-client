@@ -10,9 +10,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.pgleska.R;
+import com.github.pgleska.cryptography.CryptographyUtils;
 import com.github.pgleska.dtos.MessageDTO;
+import com.github.pgleska.ui.viewModels.UniversalViewModel;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
     private static final int MSG_TYPE_LEFT = 0;
@@ -20,10 +30,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     private List<MessageDTO> messages;
     private Context context;
+    private UniversalViewModel viewModel;
 
-    public MessagesAdapter(List<MessageDTO> messages, Context context) {
+    public MessagesAdapter(List<MessageDTO> messages, Context context, UniversalViewModel viewModel) {
         this.messages = messages;
         this.context = context;
+        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -40,7 +52,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     @Override
     public int getItemViewType(int position) {
-        if (messages.get(position).getAuthorId() == -1){
+        if (messages.get(position).getAuthorId() == viewModel.getUser().getId()){
             return MSG_TYPE_RIGHT;
         } else {
             return MSG_TYPE_LEFT;
@@ -50,7 +62,21 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        holder.message.setText(messages.get(position).getContent());
+        MessageDTO messageDTO = messages.get(position);
+        String content = "";
+        try {
+            if (messageDTO.getAuthorId() == viewModel.getUser().getId()) {
+                content = CryptographyUtils.decrypt("RSA", messageDTO.getSharedKeyEncryptedWithAuthorPKey(),
+                        viewModel.getPrivateKey());
+            } else {
+                content = CryptographyUtils.decrypt("AES", messageDTO.getSharedKeyEncryptedWithReceiverPKey(),
+                        viewModel.getPrivateKey());
+            }
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException |InvalidAlgorithmParameterException |
+                InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+        holder.message.setText(content);
     }
 
     @Override

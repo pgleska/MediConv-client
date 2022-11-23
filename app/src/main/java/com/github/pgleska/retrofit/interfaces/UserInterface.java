@@ -31,11 +31,11 @@ public interface UserInterface {
                                                    @Query("seq") String sequence);
 
     @POST("/api/user/publicKey")
-    Call<ResponseDTO<List<UserDTO>>> sendPublicKey(@Header("Authorization") String token,
+    Call<ResponseDTO<UserDTO>> sendPublicKey(@Header("Authorization") String token,
                                                    @Body UserDTO userDTO);
 
     @GET("/api/user/privateKey")
-    Call<ResponseDTO<List<PrivateKeyDTO>>> getPrivateKey(@Header("Authorization") String token);
+    Call<ResponseDTO<PrivateKeyDTO>> getPrivateKey(@Header("Authorization") String token);
 
     @POST("/api/user/privateKey")
     Call<ResponseDTO<PrivateKeyDTO>> sendPrivateKey(@Header("Authorization") String token,

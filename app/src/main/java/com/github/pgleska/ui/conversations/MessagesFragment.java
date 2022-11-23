@@ -3,6 +3,7 @@ package com.github.pgleska.ui.conversations;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,10 @@ import com.github.pgleska.ui.viewModels.UniversalViewModel;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -77,10 +81,11 @@ public class MessagesFragment extends Fragment {
         messageET = binding.singleMessageEdittext;
         sendMsgBtn = binding.chatSendMessage;
         name = binding.singleMessageName;
+        name.setText(viewModel.getOtherUser().getName());
         recyclerView = binding.singleMessageRecyclerView;
         layoutManager = new LinearLayoutManager(getContext());
         messages = new ArrayList<>();
-        messagesAdapter = new MessagesAdapter(messages, getContext());
+        messagesAdapter = new MessagesAdapter(messages, getContext(), viewModel);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(messagesAdapter);
@@ -95,16 +100,16 @@ public class MessagesFragment extends Fragment {
             imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
 
             try {
-                SecretKey sharedKey = CryptographyUtils.generateSharedKey();
                 String content = messageET.getText().toString();
                 MessageDTO messageDTO = new MessageDTO();
                 messageDTO.setReceiverId(viewModel.getOtherUser().getId());
-                messageDTO.setContent(encryptMessage(content, sharedKey));
-                messageDTO.setSharedKeyEncryptedWithAuthorPKey(encryptSharedKey(sharedKey, viewModel.getUser().getPublicKey()));
-                messageDTO.setSharedKeyEncryptedWithReceiverPKey(encryptSharedKey(sharedKey, viewModel.getOtherUser().getPublicKey()));
+                messageDTO.setContent("!@#!@!!#!@#%@%");
+                messageDTO.setSharedKeyEncryptedWithAuthorPKey(encryptMessage(content,
+                        CryptographyUtils.restorePublicKey(viewModel.getUser().getPublicKey())));
+                messageDTO.setSharedKeyEncryptedWithReceiverPKey(encryptMessage(content,
+                        CryptographyUtils.restorePublicKey(viewModel.getOtherUser().getPublicKey())));
                 sendMessage(messageDTO);
-            } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchPaddingException |
-                IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
+            } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException | InvalidKeySpecException e) {
                 e.printStackTrace();
             }
         });
@@ -120,8 +125,8 @@ public class MessagesFragment extends Fragment {
 
     }
 
-    private String encryptMessage(String content, SecretKey key) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        return CryptographyUtils.encryptSymmetric(content, key);
+    private String encryptMessage(String content, PublicKey key) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        return CryptographyUtils.encrypt("RSA", content, key);
     }
 
     private String encryptSharedKey(SecretKey secretKey, String publicKey) {
@@ -161,7 +166,7 @@ public class MessagesFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ResponseDTO<MessageDTO>> call, Throwable t) {
-
+                Log.e(TAG, t.getMessage());
             }
         });
     }

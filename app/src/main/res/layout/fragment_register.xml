@@ -25,8 +25,8 @@
         android:layout_height="120px"
         android:layout_width="700px"
         android:layout_gravity="center"
-        android:layout_marginTop="350px"
-        android:layout_marginBottom="80px"
+        android:layout_marginTop="250px"
+        android:layout_marginBottom="40px"
         android:hint="email"
         android:padding="20px"
         android:background="@drawable/solid_border"
@@ -37,10 +37,21 @@
         android:layout_height="120px"
         android:layout_width="700px"
         android:layout_gravity="center"
-        android:layout_marginBottom="120px"
+        android:layout_marginBottom="40px"
         android:padding="20px"
         android:background="@drawable/solid_border"
-        android:hint="password" />
+        android:hint="password"
+        android:inputType="textPassword"/>
+
+    <EditText
+        android:id="@+id/register_name"
+        android:layout_height="120px"
+        android:layout_width="700px"
+        android:layout_gravity="center"
+        android:layout_marginBottom="80px"
+        android:padding="20px"
+        android:background="@drawable/solid_border"
+        android:hint="name" />
 
     <Button
         android:id="@+id/btn_register"
@@ -49,7 +60,7 @@
         android:text="Register"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_margin="100px"
+        android:layout_margin="10px"
         android:textSize="50px"
         android:textColor="#EDEDEF"
         android:background="@drawable/round_edges"

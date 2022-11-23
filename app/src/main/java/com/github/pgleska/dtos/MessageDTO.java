@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class MessageDTO {
     private Integer id;
-    private LocalDateTime timestamp;
+    private String timestamp;
     private Integer authorId;
     private Integer receiverId;
     private String authorName;
@@ -21,11 +21,11 @@ public class MessageDTO {
         this.id = id;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

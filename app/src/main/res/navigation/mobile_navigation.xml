@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_nav_register_to_nav_pin"
             app:destination="@id/nav_pin" />
+        <action
+            android:id="@+id/action_nav_register_to_nav_conversations"
+            app:destination="@id/nav_conversations" />
     </fragment>
 
     <fragment
@@ -65,5 +68,8 @@
             android:id="@+id/action_nav_pin_to_nav_conversations"
             app:destination="@id/nav_conversations"
         />
+        <action
+            android:id="@+id/action_nav_pin_to_nav_login"
+            app:destination="@id/nav_login" />
     </fragment>
 </navigation>
