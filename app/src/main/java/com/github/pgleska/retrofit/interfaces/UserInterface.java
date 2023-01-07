@@ -12,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -22,6 +23,10 @@ public interface UserInterface {
 
     @GET("/api/user")
     Call<ResponseDTO<UserDTO>> getUser(@Header("Authorization") String token);
+
+    @PATCH("/api/user")
+    Call<ResponseDTO<UserDTO>> updateUser(@Header("Authorization") String token,
+                                          @Body UserDTO userDTO);
 
     @POST("/api/user/register")
     Call<ResponseDTO<UserDTO>> registerUser(@Body UserDTO userDTO);

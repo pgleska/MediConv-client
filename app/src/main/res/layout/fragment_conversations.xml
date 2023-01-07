@@ -2,7 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="900px"
+        android:layout_height="150px"
+        android:layout_marginTop="100px"
+        android:layout_marginBottom="50px"
+        android:text="Conversations"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textSize="50px"
+        android:textColor="#EDEDEF"
+        android:background="@drawable/round_edges"
+        android:backgroundTint="#1886AE"
+        tools:ignore="HardcodedText,PxUsage" />
 
     <EditText
         android:id="@+id/et_search_doctor"

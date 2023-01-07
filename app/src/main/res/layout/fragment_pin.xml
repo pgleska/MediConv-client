@@ -30,7 +30,8 @@
         android:padding="20px"
         android:background="@drawable/solid_border"
         tools:ignore="HardcodedText,PxUsage"
-        android:inputType="numberPassword"/>
+        android:inputType="numberPassword"
+        android:maxLength="4" />
 
     <Button
         android:id="@+id/btn_confirm"

@@ -63,7 +63,7 @@
         android:id="@+id/nav_pin"
         android:name="com.github.pgleska.ui.register.PinFragment"
         android:label="PIN"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_pin" >
         <action
             android:id="@+id/action_nav_pin_to_nav_conversations"
             app:destination="@id/nav_conversations"
@@ -72,4 +72,11 @@
             android:id="@+id/action_nav_pin_to_nav_login"
             app:destination="@id/nav_login" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.github.pgleska.ui.login.LogoutFragment"
+        android:label="Logout" />
+
+
 </navigation>

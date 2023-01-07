@@ -7,9 +7,14 @@ import android.view.View;
 import android.view.Menu;
 import android.widget.Toast;
 
+
+import com.github.pgleska.ui.conversations.ConversationsFragment;
+import com.github.pgleska.ui.login.LoginFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -37,12 +42,15 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_conversations, R.id.nav_messages, R.id.nav_logout)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.GONE);
     }
 
     @Override
@@ -59,22 +67,18 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-
-    //NIE DZIALA NWM CZEMU
-    @SuppressLint("NonConstantResourceId")
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.nav_profile:
-                Toast.makeText(this, "wybrano profil", Toast.LENGTH_LONG).show();
-            case R.id.nav_gallery:
-                Toast.makeText(this, "wybrano galerie", Toast.LENGTH_LONG).show();
-            case R.id.nav_home:
-                Toast.makeText(this, "wybrano home", Toast.LENGTH_LONG).show();
-            case R.id.nav_slideshow:
-                Toast.makeText(this, "wybrano slideshow", Toast.LENGTH_LONG).show();
-            default:
-                return super.onOptionsItemSelected(item);
+    public void onBackPressed() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main)
+                .getChildFragmentManager().getPrimaryNavigationFragment();
+
+        if (currentFragment instanceof LoginFragment) {
+            ((LoginFragment) currentFragment).onBackPressed();
+        } else if(currentFragment instanceof ConversationsFragment) {
+            Navigation.findNavController(this, R.id.nav_host_fragment_content_main).navigate(R.id.nav_logout);
+        }
+        else {
+            super.onBackPressed();
         }
     }
 }

@@ -20,17 +20,10 @@
         android:background="@drawable/round_edges"
         android:backgroundTint="#1886AE"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/avatar1"
-        android:layout_gravity="center"
-        />
-
     <TextView
         android:layout_width="900px"
         android:layout_height="wrap_content"
-        android:text="Username:"
+        android:text="Name:"
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_marginTop="200px"
@@ -39,10 +32,11 @@
         android:textColor="@color/black"
         />
 
-    <TextView
+    <EditText
+        android:id="@+id/profileET"
         android:layout_width="900px"
         android:layout_height="wrap_content"
-        android:text="user name will be here"
+        android:hint="user name will be here"
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_marginBottom="10px"
@@ -55,13 +49,14 @@
         android:text="E-mail:"
         android:gravity="center"
         android:layout_gravity="center"
-        android:layout_marginTop="200px"
+        android:layout_marginTop="100px"
         android:layout_marginBottom="50px"
         android:textSize="50px"
         android:textColor="@color/black"
         />
 
     <TextView
+        android:id="@+id/profileEmail"
         android:layout_width="900px"
         android:layout_height="wrap_content"
         android:text="user email wil be here"
@@ -72,10 +67,12 @@
         />
 
     <Button
-        android:id="@+id/buttonReturn"
+        android:id="@+id/updateBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Return"
-        android:layout_marginStart="50px"
-        android:background="@drawable/round_edges" />
+        android:text="Update"
+        android:textAllCaps="false"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50px"/>
+
 </LinearLayout>

@@ -13,6 +13,8 @@ import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.HashMap;
@@ -26,10 +28,11 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class CryptographyUtils {
-    public static SecretKey generateSharedKey() throws NoSuchAlgorithmException {
+    public static SecretKey generateSecretKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
         keyGenerator.init(128);
         SecretKey key = keyGenerator.generateKey();
@@ -38,7 +41,15 @@ public class CryptographyUtils {
 
     public static String encrypt(String algorithm, String input, PublicKey key) throws NoSuchPaddingException, NoSuchAlgorithmException,
             InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        Cipher cipher = Cipher.getInstance(algorithm);
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] cipherText = cipher.doFinal(input.getBytes());
+        return Base64.getEncoder()
+                .encodeToString(cipherText);
+    }
 
+    public static String encrypt(String algorithm, String input, SecretKey key) throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, key);
         byte[] cipherText = cipher.doFinal(input.getBytes());
@@ -49,7 +60,6 @@ public class CryptographyUtils {
     public static String decrypt(String algorithm, String cipherText, PrivateKey key)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
             InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-
         Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.DECRYPT_MODE, key);
         byte[] plainText = cipher.doFinal(Base64.getDecoder()
@@ -57,8 +67,30 @@ public class CryptographyUtils {
         return new String(plainText);
     }
 
-    public static SecretKey createPinCodeKey(String pinCode) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        return generateSharedKey();
+    public static String decrypt(String algorithm, String cipherText, SecretKey key)
+            throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        Cipher cipher = Cipher.getInstance(algorithm);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        byte[] plainText = cipher.doFinal(Base64.getDecoder()
+                .decode(cipherText));
+        return new String(plainText);
+    }
+
+    public static byte[] generateSalt() {
+        byte[] salt = new byte[128];
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(salt);
+        return salt;
+    }
+
+    public static SecretKey createPinCodeKey(String pinCode, byte[] salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        final int iterations = 10000;
+        final int outputKeyLength = 128;
+        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+        KeySpec keySpec = new PBEKeySpec(pinCode.toCharArray(), salt, iterations, outputKeyLength);
+        SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
+        return secretKey;
     }
 
 
@@ -70,8 +102,8 @@ public class CryptographyUtils {
 
     public static PrivateKey restorePrivateKey(String keyString) throws NoSuchAlgorithmException, InvalidKeySpecException {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(keyString));
-        return keyFactory.generatePrivate(publicKeySpec);
+        EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(keyString));
+        return keyFactory.generatePrivate(privateKeySpec);
     }
 
     public static SecretKey restoreSecretKey(String encodedKey) {

@@ -32,6 +32,15 @@ public class UniversalViewModel extends ViewModel {
         this.sk = new MutableLiveData<>();
     }
 
+    public void clear() {
+        this.privateKey = new MutableLiveData<>();
+        this.token = new MutableLiveData<>();
+        this.user = new MutableLiveData<>();
+        this.otherUser = new MutableLiveData<>();
+        this.mode = new MutableLiveData<>();
+        this.sk = new MutableLiveData<>();
+    }
+
     public void setPrivateKey(PrivateKey privateKey) {
         this.privateKey.setValue(privateKey);
     }

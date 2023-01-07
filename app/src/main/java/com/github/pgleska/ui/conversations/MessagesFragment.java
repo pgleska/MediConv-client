@@ -2,7 +2,6 @@ package com.github.pgleska.ui.conversations;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,13 +100,19 @@ public class MessagesFragment extends Fragment {
 
             try {
                 String content = messageET.getText().toString();
+                messageET.setText("");
                 MessageDTO messageDTO = new MessageDTO();
                 messageDTO.setReceiverId(viewModel.getOtherUser().getId());
-                messageDTO.setContent("!@#!@!!#!@#%@%");
-                messageDTO.setSharedKeyEncryptedWithAuthorPKey(encryptMessage(content,
-                        CryptographyUtils.restorePublicKey(viewModel.getUser().getPublicKey())));
-                messageDTO.setSharedKeyEncryptedWithReceiverPKey(encryptMessage(content,
-                        CryptographyUtils.restorePublicKey(viewModel.getOtherUser().getPublicKey())));
+
+                SecretKey secretKey = CryptographyUtils.generateSecretKey();
+                String encryptedContent = encryptMessage(content, secretKey);
+                String encryptedAuthorSecretKey = encryptSecretKey(secretKey, viewModel.getUser().getPublicKey());
+                String encryptedReceiverSecretKey = encryptSecretKey(secretKey, viewModel.getOtherUser().getPublicKey());
+
+                messageDTO.setContent(encryptedContent);
+                messageDTO.setAuthorSecretKey(encryptedAuthorSecretKey);
+                messageDTO.setReceiverSecretKey(encryptedReceiverSecretKey);
+
                 sendMessage(messageDTO);
             } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException | InvalidKeySpecException e) {
                 e.printStackTrace();
@@ -125,13 +130,14 @@ public class MessagesFragment extends Fragment {
 
     }
 
-    private String encryptMessage(String content, PublicKey key) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        return CryptographyUtils.encrypt("RSA", content, key);
+    private String encryptMessage(String content, SecretKey key) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        return CryptographyUtils.encrypt("AES", content, key);
     }
 
-    private String encryptSharedKey(SecretKey secretKey, String publicKey) {
-
-        return "";
+    private String encryptSecretKey(SecretKey secretKey, String publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        String plainSecretKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        PublicKey pkey = CryptographyUtils.restorePublicKey(publicKey);
+        return CryptographyUtils.encrypt("RSA", plainSecretKey, pkey);
     }
 
     private void downloadMessages() {

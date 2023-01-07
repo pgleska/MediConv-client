@@ -46,7 +46,6 @@ public class ConversationsFragment extends Fragment {
 
     private List<UserDTO> users;
 
-    private MessageInterface messageInterface;
     private UserInterface userInterface;
 
     private EditText searchBar;

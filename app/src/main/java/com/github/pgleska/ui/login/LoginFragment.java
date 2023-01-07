@@ -69,6 +69,8 @@ public class LoginFragment extends Fragment {
     private void initListeners() {
         ButtonRegister.setOnClickListener(v -> {
             viewModel.setRegisterMode();
+            emailET.setText("");
+            passwordET.setText("");
             Navigation.findNavController(root).navigate(R.id.action_nav_login_to_nav_register);
         });
         ButtonLogin.setOnClickListener(v -> {
@@ -84,9 +86,9 @@ public class LoginFragment extends Fragment {
                 public void onResponse(Call<TokenDTO> call, Response<TokenDTO> response) {
                     if(response.isSuccessful()) {
                         viewModel.setToken(response.body().getToken());
-                        emailET.clearComposingText();
-                        passwordET.clearComposingText();
-                        Navigation.findNavController(root).navigate(R.id.action_nav_login_to_nav_conversations);
+                        emailET.setText("");
+                        passwordET.setText("");
+                        Navigation.findNavController(root).navigate(R.id.action_nav_login_to_nav_pin);
                     } else {
                         Log.e(TAG, String.valueOf(response.code()));
                         Toast.makeText(getContext(), "Incorrect email or password", Toast.LENGTH_LONG).show();
@@ -99,5 +101,10 @@ public class LoginFragment extends Fragment {
                 }
             });
         });
+    }
+
+    public void onBackPressed() {
+        Toast.makeText(getContext(), "Goodbye!", Toast.LENGTH_SHORT).show();
+        getActivity().finish();
     }
 }

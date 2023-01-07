@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +36,8 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -53,6 +57,12 @@ public class RegisterFragment extends Fragment {
     private UniversalViewModel viewModel;
     private EditText emailET, passwordET, nameET;
     private UserInterface userInterface;
+    private RadioGroup radioGroup;
+    private String role = "USER";
+
+    private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,}$";
+    private  static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+    private Matcher matcher;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -79,90 +89,80 @@ public class RegisterFragment extends Fragment {
         passwordET = binding.registerPassword;
         nameET = binding.registerName;
         userInterface = RetrofitClient.getUserInterface(getString(R.string.server_address));
+        radioGroup = binding.radioGroup;
     }
 
     private void initListeners() {
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.radio_user:
+                    role = "USER";
+                    break;
+                case R.id.radio_doctor:
+                    role = "DOCTOR";
+                    break;
+            }
+        });
+
         ButtonRegister.setOnClickListener(v -> {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setEmail(emailET.getText().toString());
-            userDTO.setPassword(passwordET.getText().toString());
-            userDTO.setName(nameET.getText().toString());
-            userDTO.setRole("USER");
-            Call<ResponseDTO<UserDTO>> call = userInterface.registerUser(userDTO);
-            call.enqueue(new Callback<ResponseDTO<UserDTO>>() {
-                @Override
-                public void onResponse(Call<ResponseDTO<UserDTO>> call, Response<ResponseDTO<UserDTO>> response) {
-                    if(response.isSuccessful()) {
-                        genKeysAndLogin(emailET.getText().toString(), passwordET.getText().toString());
-                        emailET.clearComposingText();
-                        passwordET.clearComposingText();
-                        nameET.clearComposingText();
+            if (verifyPassword(passwordET.getText().toString())) {
+                UserDTO userDTO = new UserDTO();
+                userDTO.setEmail(emailET.getText().toString());
+                userDTO.setPassword(passwordET.getText().toString());
+                userDTO.setName(nameET.getText().toString());
+                userDTO.setRole(role);
+                Call<ResponseDTO<UserDTO>> call = userInterface.registerUser(userDTO);
+                call.enqueue(new Callback<ResponseDTO<UserDTO>>() {
+                    @Override
+                    public void onResponse(Call<ResponseDTO<UserDTO>> call, Response<ResponseDTO<UserDTO>> response) {
+                        if (response.isSuccessful()) {
+                            CredentialsDTO credentialsDTO = new CredentialsDTO();
+                            credentialsDTO.setEmail(emailET.getText().toString());
+                            credentialsDTO.setPassword(passwordET.getText().toString());
+                            emailET.clearComposingText();
+                            passwordET.clearComposingText();
+                            nameET.clearComposingText();
+                            Call<TokenDTO> call2 = userInterface.login(credentialsDTO);
+                            call2.enqueue(new Callback<TokenDTO>() {
+                                @Override
+                                public void onResponse(Call<TokenDTO> call, Response<TokenDTO> response) {
+                                    if (response.isSuccessful()) {
+                                        viewModel.setToken(response.body().getToken());
+                                        Navigation.findNavController(root).navigate(R.id.action_nav_register_to_nav_pin);
+                                    }
+                                }
 
-                    } else {
-                        Toast.makeText(getContext(), "Incorrect data", Toast.LENGTH_LONG).show();
+                                @Override
+                                public void onFailure(Call<TokenDTO> call, Throwable t) {
+
+                                }
+                            });
+
+                        } else {
+                            Toast.makeText(getContext(), "Incorrect email", Toast.LENGTH_LONG).show();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<ResponseDTO<UserDTO>> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<ResponseDTO<UserDTO>> call, Throwable t) {
 
-                }
-            });
+                    }
+                });
+            } else {
+                Toast.makeText(getContext(), "Password must contain at least:\n" +
+                        "- 8 characters\n" +
+                        "- 1 upper case letter\n" +
+                        "- 1 lower case letter\n" +
+                        "- 1 digit\n" +
+                        "- 1 special character", Toast.LENGTH_LONG).show();
+                passwordET.setText("");
+            }
         });
     }
 
-    private void genKeysAndLogin(String email, String password) {
-        try {
-            KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-            generator.initialize(2048);
-            KeyPair pair = generator.generateKeyPair();
-            PrivateKey privateKey = pair.getPrivate();
-            PublicKey publicKey = pair.getPublic();
-
-            viewModel.setPrivateKey(privateKey);
-            String publicKeyEncoded = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-            CredentialsDTO credentialsDTO = new CredentialsDTO();
-            credentialsDTO.setEmail(email);
-            credentialsDTO.setPassword(password);
-            Call<TokenDTO> call = userInterface.login(credentialsDTO);
-            call.enqueue(new Callback<TokenDTO>() {
-                @Override
-                public void onResponse(Call<TokenDTO> call, Response<TokenDTO> response) {
-                    if(response.isSuccessful()) {
-                        viewModel.setToken(response.body().getToken());
-                        sendPublicKey(publicKeyEncoded);
-                        Navigation.findNavController(root).navigate(R.id.action_nav_register_to_nav_conversations);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<TokenDTO> call, Throwable t) {
-
-                }
-            });
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendPublicKey(String publicKey) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setPublicKey(publicKey);
-        Call<ResponseDTO<UserDTO>> call = userInterface.sendPublicKey(viewModel.getToken(), userDTO);
-        call.enqueue(new Callback<ResponseDTO<UserDTO>>() {
-            @Override
-            public void onResponse(Call<ResponseDTO<UserDTO>> call, Response<ResponseDTO<UserDTO>> response) {
-                if(!response.isSuccessful()) {
-                    Log.e(TAG, String.valueOf(response.code()));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseDTO<UserDTO>> call, Throwable t) {
-
-            }
-        });
+    private boolean verifyPassword(String password) {
+        matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 }
 

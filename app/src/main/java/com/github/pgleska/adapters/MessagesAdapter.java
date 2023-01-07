@@ -17,7 +17,6 @@ import com.github.pgleska.ui.viewModels.UniversalViewModel;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -64,13 +63,21 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         MessageDTO messageDTO = messages.get(position);
         String content = "";
+        String secretKey = "";
         try {
             if (messageDTO.getAuthorId() == viewModel.getUser().getId()) {
-                content = CryptographyUtils.decrypt("RSA", messageDTO.getSharedKeyEncryptedWithAuthorPKey(),
+
+                secretKey = CryptographyUtils.decrypt("RSA", messageDTO.getAuthorSecretKey(),
                         viewModel.getPrivateKey());
+
+                content = CryptographyUtils.decrypt("AES", messageDTO.getContent(),
+                        CryptographyUtils.restoreSecretKey(secretKey));
             } else {
-                content = CryptographyUtils.decrypt("AES", messageDTO.getSharedKeyEncryptedWithReceiverPKey(),
+                secretKey = CryptographyUtils.decrypt("RSA", messageDTO.getReceiverSecretKey(),
                         viewModel.getPrivateKey());
+
+                content = CryptographyUtils.decrypt("AES", messageDTO.getContent(),
+                        CryptographyUtils.restoreSecretKey(secretKey));
             }
         } catch (NoSuchPaddingException | NoSuchAlgorithmException |InvalidAlgorithmParameterException |
                 InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {

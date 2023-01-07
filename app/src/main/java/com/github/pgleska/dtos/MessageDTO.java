@@ -1,7 +1,5 @@
 package com.github.pgleska.dtos;
 
-import java.time.LocalDateTime;
-
 public class MessageDTO {
     private Integer id;
     private String timestamp;
@@ -10,8 +8,8 @@ public class MessageDTO {
     private String authorName;
     private String receiverName;
     private String content;
-    private String sharedKeyEncryptedWithAuthorPKey;
-    private String sharedKeyEncryptedWithReceiverPKey;
+    private String authorSecretKey;
+    private String receiverSecretKey;
 
     public Integer getId() {
         return id;
@@ -69,19 +67,19 @@ public class MessageDTO {
         this.content = content;
     }
 
-    public String getSharedKeyEncryptedWithAuthorPKey() {
-        return sharedKeyEncryptedWithAuthorPKey;
+    public String getAuthorSecretKey() {
+        return authorSecretKey;
     }
 
-    public void setSharedKeyEncryptedWithAuthorPKey(String sharedKeyEncryptedWithAuthorPKey) {
-        this.sharedKeyEncryptedWithAuthorPKey = sharedKeyEncryptedWithAuthorPKey;
+    public void setAuthorSecretKey(String authorSecretKey) {
+        this.authorSecretKey = authorSecretKey;
     }
 
-    public String getSharedKeyEncryptedWithReceiverPKey() {
-        return sharedKeyEncryptedWithReceiverPKey;
+    public String getReceiverSecretKey() {
+        return receiverSecretKey;
     }
 
-    public void setSharedKeyEncryptedWithReceiverPKey(String sharedKeyEncryptedWithReceiverPKey) {
-        this.sharedKeyEncryptedWithReceiverPKey = sharedKeyEncryptedWithReceiverPKey;
+    public void setReceiverSecretKey(String receiverSecretKey) {
+        this.receiverSecretKey = receiverSecretKey;
     }
 }
